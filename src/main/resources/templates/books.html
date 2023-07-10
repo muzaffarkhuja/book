@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<h4>Books</h4>
+    <table class="table">
+        <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Author</th>
+            <th>Library</th>
+            <th>Size</th>
+            <th>Keyword</th>
+            <th>Theme</th>
+            <th>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                </button>
+            </th>
+        </thead>
+        <tr th:each="book: ${books}">
+            <td  th:text="${book.id}" />
+            <td  th:text="${book.name}" />
+            <td  th:text="${book.author.FullName}"/>
+            <td  th:text="${book.library.name}"/>
+            <td  th:text="${book.size}"/>
+            <td  th:text="${book.keyword}"/>
+            <td  th:text="${book.theme}"/>
+            <td>
+                <button type="button" class="btn btn-outline-danger" data-toggle="modal"
+                        data-target="#deleteModal" th:attr="onclick=|onDelete('${book.id}')|" >❌</button>
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#updateModal"
+                        th:attr="onclick=|onUpdate('${book.id}', '${book.name}', '${book.author.id}', '${book.library.id}',
+                        '${book.size}', '${book.keyword}', '${book.theme}')|" >🔄</button>
+            </td>
+        </tr>
+    </table>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Add</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/book/add}" method="post" th:object="${bookDto}">
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="name" placeholder="Name:" >
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="authorId"  placeholder="AuthorID:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="libraryId"  placeholder="LibraryId:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="size" placeholder="Size:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="keyword"  placeholder="Keyword:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="theme"  placeholder="Theme:">
+                    </div>
+
+                    <input type="submit" value="save" name="s" class="btn btn-primary form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Add modal ended-->
+
+<!--Delete modal started-->
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete?<p id="p"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a id = "sure"><button type="button"  class="btn btn-danger"  >Sure!</button></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete modal ended-->
+
+<!--Update modal started-->
+
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">Update</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/book/update}" method="patch" th:object="${bookDto}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="id" id="updateId"  readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text"  class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="name" id="name" placeholder="Name:"  >
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="authorId" id="authorId"  placeholder="AuthorID:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="libraryId" id="libraryId"  placeholder="LibraryId:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="size" id="size" placeholder="Size:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="keyword" id="keyword"  placeholder="Keyword:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="theme" id="theme"  placeholder="Theme:">
+                    </div>
+
+                    <input type="submit" class="btn btn-primary form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Update modal ended-->
+
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script>
+    function onDelete(id){
+        document.getElementById("sure").setAttribute("href", "/book/delete/" + id);
+    }
+</script>
+<script>
+    function onUpdate(id, name, author, library, size, keyword, theme){
+        document.getElementById("updateId").setAttribute("value", id)
+        document.getElementById("name").setAttribute("value", name)
+        document.getElementById("authorId").setAttribute("value", author)
+        document.getElementById("libraryId").setAttribute("value", library)
+        document.getElementById("size").setAttribute("value", size)
+        document.getElementById("keyword").setAttribute("value", keyword)
+        document.getElementById("theme").setAttribute("value", theme)
+    }</script>
+</html>
