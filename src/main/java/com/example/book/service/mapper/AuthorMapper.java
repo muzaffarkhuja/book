@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface AuthorMapper extends CommonMapper<AuthorDto, AuthorCreateDto, AuthorDto, Author>,BaseMapper {
+public interface AuthorMapper extends CommonMapper<AuthorDto, AuthorCreateDto, AuthorDto, Author> {
     @Override
     Author update(AuthorDto authorDto, @MappingTarget Author author);
 }

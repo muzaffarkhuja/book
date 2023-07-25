@@ -23,7 +23,9 @@ public class Book {
     @ManyToOne
     private Library library;
     private Integer size;
-    private String keyword;
+    @Column(name = "keywords", columnDefinition = "character varying[]")
+    private String[] keywords;
+    private int searchedCount;
     @Enumerated(EnumType.STRING)
     private Theme theme;
 

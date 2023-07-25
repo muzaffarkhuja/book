@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -39,11 +40,16 @@ public class BookResources {
     @Operation(
             method = "Get All books",
             description = "Need to send Params to search books, and you can add page and size. " +
-                    "Params to search are -> (Integer id, String name, Integer authorId, Integer libraryId, Integer minSize, Integer maxSize, String keyword, String theme)"
+                    "Params to search are -> (Integer id, String name, Integer authorId, Integer libraryId, Integer minSize, Integer maxSize, String theme)"
     )
     @GetMapping()
     public ResponseDto<Page<BookDto>> getAll(@RequestParam Map<String, String> map){
         return bookService.getAll(map);
+    }
+
+    @GetMapping("by-keyword")
+    public ResponseDto<List<BookDto>> getByKeyword(@RequestBody String[] keywords){
+        return bookService.getByKeyword(keywords);
     }
 
     @Operation(

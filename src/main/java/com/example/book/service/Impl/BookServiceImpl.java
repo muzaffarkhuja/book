@@ -8,9 +8,11 @@ import com.example.book.enums.Theme;
 import com.example.book.model.Author;
 import com.example.book.model.Book;
 import com.example.book.model.Library;
+import com.example.book.model.Searchs;
 import com.example.book.repository.AuthorRepository;
 import com.example.book.repository.BookRepository;
 import com.example.book.repository.LibraryRepository;
+import com.example.book.repository.SearchRepository;
 import com.example.book.service.BookService;
 import com.example.book.service.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,6 +35,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final LibraryRepository libraryRepository;
+    private final SearchRepository searchRepository;
 
     @Override
     public ResponseDto<BookDto> add(BookCreateDto bookDto) {
@@ -109,7 +114,7 @@ public class BookServiceImpl implements BookService {
 
             Page<Book> books = bookRepository.universalSearch(pageRequest, id, "%" + map.getOrDefault("name", "") + "%",
                     "%" + map.getOrDefault("author", "") + "%", "%" + map.getOrDefault("library", "") + "%",
-                    minSize, maxSize, "%" + map.getOrDefault("keyword", "") + "%", theme, "%"+map.getOrDefault("city","")+"%");
+                    minSize, maxSize, theme, "%"+map.getOrDefault("city","")+"%");
 
             return ResponseDto.<Page<BookDto>>builder()
                     .message(OK)
@@ -124,6 +129,28 @@ public class BookServiceImpl implements BookService {
                     .build();
         }
 
+    }
+
+    @Override
+    public ResponseDto<List<BookDto>> getByKeyword(String[] keywords) {
+        try {
+            List<Book> books = bookRepository.findByKeywords(keywords);
+            books.forEach(book -> book.setSearchedCount(book.getSearchedCount() + 1));
+            bookRepository.saveAll(books);
+            searchRepository.save(new Searchs(keywords, books.size()));
+
+
+            return ResponseDto.<List<BookDto>>builder()
+                    .success(true)
+                    .message(OK)
+                    .data(books.stream().map(bookMapper::toDto).toList())
+                    .build();
+        } catch (Exception e){
+            return ResponseDto.<List<BookDto>>builder()
+                    .code(DATABASE_ERROR_CODE)
+                    .message(DATABASE_ERROR)
+                    .build();
+        }
     }
 
     @Override

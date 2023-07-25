@@ -13,6 +13,7 @@
             <th>Name</th>
             <th>Author</th>
             <th>Library</th>
+            <th>City</th>
             <th>Size</th>
             <th>Keyword</th>
             <th>Theme</th>
@@ -23,6 +24,7 @@
                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
                 </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">🔍</button>
             </th>
         </thead>
         <tr th:each="book: ${books}">
@@ -30,6 +32,7 @@
             <td  th:text="${book.name}" />
             <td  th:text="${book.author.FullName}"/>
             <td  th:text="${book.library.name}"/>
+            <td th:text="${book.library.city.name}"/>
             <td  th:text="${book.size}"/>
             <td  th:text="${book.keyword}"/>
             <td  th:text="${book.theme}"/>
@@ -43,7 +46,7 @@
         </tr>
     </table>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -53,18 +56,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/book/add}" method="post" th:object="${bookDto}">
+                <form th:action="@{/book/add}" method="post" th:object="${bookDto} ">
 
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="name" placeholder="Name:" >
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="authorId"  placeholder="AuthorID:">
+                        <select name="authorId" class="form-control">
+                            <option th:each = "author: ${authors}" th:text = "${author.getFullName()}" th:value="${author.getId()}"></option>
+                        </select>
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="libraryId"  placeholder="LibraryId:">
+                        <select name="libraryId" class="form-control">
+                            <option th:each="library: ${libraries}" th:text="${library.getName()}" th:value="${library.getId()}"></option>
+                        </select>
                     </div>
 
                     <div class="input-group mb-3">
@@ -136,11 +143,17 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="authorId" id="authorId"  placeholder="AuthorID:">
+                        <select name="authorId" class="form-control" >
+                            <option id="authorId">Select Author</option>
+                            <option th:each="author: ${authors}" th:value="${author.getId()}" th:text="${author.getFullName()}" ></option>
+                        </select>
                     </div>
 
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="libraryId" id="libraryId"  placeholder="LibraryId:">
+                        <select name="libraryId" class="form-control">
+                            <option id="libraryId">Select library</option>
+                            <option th:each="library: ${libraries}" th:value="${library.getId()}" th:text="${library.getName()}"></option>
+                        </select>
                     </div>
 
                     <div class="input-group mb-3">
@@ -167,6 +180,65 @@
 
 <!--Update modal ended-->
 
+<!--Search modal started-->
+
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="id" id="searchId" placeholder="Id">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text"  class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="name" id="searchName"  placeholder="Name:"  >
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="author" id="searchAuthor" placeholder="Author:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="library" id="searchLibrary" placeholder="Library:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="minSize" id="searchMinSize" placeholder="MinSize:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="maxSize" id="searchMaxSize" placeholder="MaxSize:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="keyword" id="searchKeyword" placeholder="Keyword:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="theme" id="searchTheme" placeholder="Theme:">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text"  class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name="city" id="searchCity" placeholder="City:">
+                    </div>
+
+                    <input type="submit" onclick="changeFormAction()" id="submitButton" class="btn btn-primary form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Search modal ended-->
+
 </body>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -185,5 +257,25 @@
         document.getElementById("size").setAttribute("value", size)
         document.getElementById("keyword").setAttribute("value", keyword)
         document.getElementById("theme").setAttribute("value", theme)
-    }</script>
+    }
+</script>
+<script>
+    function changeFormAction(){
+        var id = document.getElementById("searchId").value
+        var name = document.getElementById("searchName").value
+        var author = document.getElementById("searchAuthor").value
+        var library = document.getElementById("searchLibrary").value
+        var minSize = document.getElementById("searchMinSize").value
+        var maxSize = document.getElementById("searchMaxSize").value
+        var keyword = document.getElementById("searchKeyword").value
+        var theme = document.getElementById("searchTheme").value
+        var city = document.getElementById("searchCity").value
+        var url = "http://localhost:9988/book?name="+name+"&author="+author+"&library="+library+"&keyword="+keyword+"&city="+city
+        if(id != "") url+="&id="+id;
+        if(minSize != "") url+="&minSize="+minSize;
+        if(maxSize != "") url+="&maxSize="+maxSize;
+        if(theme != "") url+="&theme="+theme;
+        window.location.href=url
+    }
+</script>
 </html>

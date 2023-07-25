@@ -17,6 +17,7 @@ public class BookDto {
     private AuthorDto author;
     private LibraryDto library;
     private Integer size;
-    private String keyword;
+    private String[] keywords;
+    private int searchedCount;
     private String theme;
 }

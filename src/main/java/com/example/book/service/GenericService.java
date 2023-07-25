@@ -4,7 +4,13 @@ import com.example.book.dto.ResponseDto;
 
 import java.util.List;
 
-public interface GenericService<CD,UD,D> {
+/**
+ *
+ * @param <CD> CreateDTO
+ * @param <UD> UpdateDTO
+ * @param <D> DTO
+ */
+public interface GenericService<CD, UD, D> {
     ResponseDto<D> add(CD authorDto);
 
     ResponseDto<D> getById(Integer id);

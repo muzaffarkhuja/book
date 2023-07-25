@@ -1,8 +1,15 @@
 package com.example.book.service.mapper;
 
-public interface CommonMapper<Dto, CreateDto, UpdateDto, Model> {
-    Dto toDto(Model model);
+/**
+ *
+ * @param <D> DTO
+ * @param <CD> CreateDTO
+ * @param <UD> UpdateDTO
+ * @param <E> Entity
+ */
+public interface CommonMapper<D , CD, UD, E> extends BaseMapper {
+    D toDto(E model);
 
-    Model toEntity(CreateDto dto);
-    Model update(UpdateDto dto, Model model);
+    E toEntity(CD dto);
+    E update(UD dto, E model);
 }

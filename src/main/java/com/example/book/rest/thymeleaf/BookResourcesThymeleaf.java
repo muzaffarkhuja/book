@@ -4,7 +4,9 @@ import com.example.book.dto.ResponseDto;
 import com.example.book.dto.book.BookCreateDto;
 import com.example.book.dto.book.BookDto;
 import com.example.book.dto.book.BookUpdateDto;
+import com.example.book.service.Impl.AuthorServiceImpl;
 import com.example.book.service.Impl.BookServiceImpl;
+import com.example.book.service.LibraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BookResourcesThymeleaf {
     private final BookServiceImpl bookService;
+    private final AuthorServiceImpl authorService;
+    private final LibraryService libraryService;
 
     @PostMapping("/add")
     public String add(@ModelAttribute BookCreateDto bookDto){
@@ -34,6 +38,8 @@ public class BookResourcesThymeleaf {
     @GetMapping()
     public String getAll(@RequestParam Map<String, String> map, Model model){
         model.addAttribute("books", bookService.getAll(map).getData().stream().toList());
+        model.addAttribute("authors", authorService.getAll().getData());
+        model.addAttribute("libraries", libraryService.getAll().getData());
         return "books";
     }
 

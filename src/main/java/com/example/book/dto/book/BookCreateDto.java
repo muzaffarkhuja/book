@@ -14,6 +14,6 @@ public class BookCreateDto {
     private Integer authorId;
     private Integer libraryId;
     private Integer size;
-    private String keyword;
+    private String[] keywords;
     private String theme;
 }

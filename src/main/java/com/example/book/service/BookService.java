@@ -6,6 +6,7 @@ import com.example.book.dto.book.BookDto;
 import com.example.book.dto.book.BookUpdateDto;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 public interface BookService {
@@ -15,4 +16,6 @@ public interface BookService {
 
     ResponseDto<BookDto> update(BookUpdateDto bookDto);
     ResponseDto<Void> delete(Integer id);
+
+    ResponseDto<List<BookDto>> getByKeyword(String[] keywords);
 }
