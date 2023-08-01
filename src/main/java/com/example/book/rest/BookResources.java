@@ -48,8 +48,10 @@ public class BookResources {
     }
 
     @GetMapping("by-keyword")
-    public ResponseDto<List<BookDto>> getByKeyword(@RequestBody String[] keywords){
-        return bookService.getByKeyword(keywords);
+    public ResponseDto<List<BookDto>> getByKeyword(@RequestParam String[] keywords){
+        ResponseDto<List<BookDto>> response = bookService.getByKeyword(keywords);
+        response.setMessage(response.getMessage() + ", Thread -> " + Thread.currentThread().getName());
+        return response;
     }
 
     @Operation(
