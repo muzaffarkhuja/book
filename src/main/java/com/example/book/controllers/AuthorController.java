@@ -1,10 +1,11 @@
-package com.example.book.rest;
+package com.example.book.controllers;
 
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.author.AuthorCreateDto;
 import com.example.book.dto.author.AuthorDto;
 import com.example.book.service.Impl.AuthorServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("author")
+@SecurityRequirement(name = "Authorization")
 @RequiredArgsConstructor
-public class AuthorResources {
+public class AuthorController {
     private final AuthorServiceImpl authorService;
 
     @Operation(

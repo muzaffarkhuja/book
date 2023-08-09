@@ -1,9 +1,9 @@
 package com.example.book.service.mapper;
 
+import com.example.book.model.Book;
 import com.example.book.dto.book.BookCreateDto;
 import com.example.book.dto.book.BookDto;
 import com.example.book.dto.book.BookUpdateDto;
-import com.example.book.model.Book;
 import com.example.book.repository.AuthorRepository;
 import com.example.book.repository.LibraryRepository;
 import org.mapstruct.*;

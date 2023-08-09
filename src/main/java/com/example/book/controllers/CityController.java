@@ -1,10 +1,11 @@
-package com.example.book.rest;
+package com.example.book.controllers;
 
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.city.CityCreateDto;
 import com.example.book.dto.city.CityDto;
 import com.example.book.service.Impl.CityServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("city")
+@SecurityRequirement(name = "Authorization")
 @RequiredArgsConstructor
-public class CityResources {
+public class CityController {
     private final CityServiceImpl cityService;
 
     @Operation(

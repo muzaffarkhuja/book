@@ -1,4 +1,4 @@
-package com.example.book.enums;
+package com.example.book.model.enums;
 
 public enum Theme {
     Literary,

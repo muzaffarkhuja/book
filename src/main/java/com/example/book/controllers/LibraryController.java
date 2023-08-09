@@ -1,4 +1,4 @@
-package com.example.book.rest;
+package com.example.book.controllers;
 
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.library.LibraryCreateDto;
@@ -6,6 +6,7 @@ import com.example.book.dto.library.LibraryDto;
 import com.example.book.dto.library.LibraryUpdateDto;
 import com.example.book.service.Impl.LibraryServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("library")
+@SecurityRequirement(name = "Authorization")
 @RequiredArgsConstructor
-public class LibraryResources {
+public class LibraryController {
     private final LibraryServiceImpl libraryService;
 
     @Operation(

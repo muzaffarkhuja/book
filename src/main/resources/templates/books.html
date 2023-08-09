@@ -34,14 +34,14 @@
             <td  th:text="${book.library.name}"/>
             <td th:text="${book.library.city.name}"/>
             <td  th:text="${book.size}"/>
-            <td  th:text="${book.keyword}"/>
+            <td  th:text="${book.keywords}"/>
             <td  th:text="${book.theme}"/>
             <td>
                 <button type="button" class="btn btn-outline-danger" data-toggle="modal"
                         data-target="#deleteModal" th:attr="onclick=|onDelete('${book.id}')|" >❌</button>
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#updateModal"
                         th:attr="onclick=|onUpdate('${book.id}', '${book.name}', '${book.author.id}', '${book.library.id}',
-                        '${book.size}', '${book.keyword}', '${book.theme}')|" >🔄</button>
+                        '${book.size}', '${book.keywords}', '${book.theme}')|" >🔄</button>
             </td>
         </tr>
     </table>

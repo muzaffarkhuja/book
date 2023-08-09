@@ -1,6 +1,6 @@
 package com.example.book.model;
 
-import com.example.book.enums.Theme;
+import com.example.book.model.enums.Theme;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

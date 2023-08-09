@@ -4,7 +4,7 @@ import com.example.book.dto.ResponseDto;
 import com.example.book.dto.book.BookCreateDto;
 import com.example.book.dto.book.BookDto;
 import com.example.book.dto.book.BookUpdateDto;
-import com.example.book.enums.Theme;
+import com.example.book.model.enums.Theme;
 import com.example.book.model.Author;
 import com.example.book.model.Book;
 import com.example.book.model.Library;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

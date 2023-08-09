@@ -1,4 +1,4 @@
-package com.example.book.rest.thymeleaf;
+package com.example.book.controllers.thymeleaf;
 
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.book.BookCreateDto;

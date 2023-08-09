@@ -1,14 +1,12 @@
-package com.example.book.rest;
+package com.example.book.controllers;
 
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.book.BookCreateDto;
 import com.example.book.dto.book.BookDto;
 import com.example.book.dto.book.BookUpdateDto;
 import com.example.book.service.Impl.BookServiceImpl;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("book-resources")
+@RequestMapping("book-controller")
+@SecurityRequirement(name = "Authorization")
 @RequiredArgsConstructor
-public class BookResources {
+public class BookController {
     private final BookServiceImpl bookService;
 
     @Operation(
             method = "Add new book",
-            description = "Need to send BookDto(String name, Integer authorId, Integer libraryId, Integer size, String keyword, String theme) " +
+            description = "Need to send BookDto(String name, Integer authorId, Integer libraryId, Integer size, String[] keyword, String theme) " +
                     "to this endpoint to create new book"
     )
     @PostMapping("/add")
