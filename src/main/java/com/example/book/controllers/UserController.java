@@ -21,12 +21,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("add")
+    @PostMapping("registration")
     public ResponseDto<UserDto> add(@RequestBody UserCreateDto userCreateDto) {
         return userService.add(userCreateDto);
     }
 
-    @PostMapping("login")
+    @PostMapping("login-with-username")
     public ResponseDto<String> login(@RequestBody LoginDto loginDto) throws NoSuchMethodException {
         return userService.login(loginDto);
     }

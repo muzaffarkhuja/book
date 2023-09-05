@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Getter
@@ -25,6 +26,9 @@ public class AuthUser implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    private String address;
+    private String gender;
+    private LocalDateTime birthDate;
     private String role = "USER";
 
     @Override
