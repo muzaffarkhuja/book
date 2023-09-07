@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/user/**").permitAll().requestMatchers(HttpMethod.GET, "/user/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/v3/api-docs.yaml", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll())
-//                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "**").permitAll())
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService())))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -98,6 +98,7 @@ public class SecurityConfig {
                     authUser.setGender(user.getAttribute("genders"));
                     authUser.setAddress(user.getAttribute("addresses"));
                     authUser.setBirthDate(user.getAttribute("birthdays"));
+
                     for (Map.Entry<String, Object> stringObjectEntry : user.getAttributes().entrySet()) {
                         System.out.println(stringObjectEntry);
                     }
