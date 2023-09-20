@@ -27,6 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BookController {
     private final BookServiceImpl bookService;
+    private final BookExcelExporter excelExporter;
 
     @Operation(
             method = "Add new book",
@@ -75,12 +76,20 @@ public class BookController {
 
         List<BookDto> list = bookService.getByKeyword(keywords).getData();
         if(type.equals(".xlsx")) {
-            BookExcelExporter excelExporter = new BookExcelExporter(list);
+            excelExporter.setData(list);
             excelExporter.export(response);
         } else {
             BookPdfExporter pdfExporter = new BookPdfExporter(list, response);
             pdfExporter.export();
         }
+    }
+
+    @GetMapping("export/amazonS3")
+    public String exportToAmazonS3(@RequestParam String[] keywords) throws IOException {
+        String fileName = "books_" + new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+
+        excelExporter.setData(bookService.getByKeyword(keywords).getData());
+        return excelExporter.export(fileName);
     }
 
     @Operation(

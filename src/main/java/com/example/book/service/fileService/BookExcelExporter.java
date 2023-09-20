@@ -1,7 +1,10 @@
 package com.example.book.service.fileService;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.book.dto.book.BookDto;
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -9,19 +12,33 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.List;
 
+@Service
 public class BookExcelExporter {
 
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
     private List<BookDto> list;
-    public BookExcelExporter(List<BookDto> list) {
-        this.list = list;
+    @Autowired
+    private AmazonS3 s3Client;
+    @Value("${application.bucket.name}")
+    private String bucketName;
+
+    public BookExcelExporter() {
         workbook = new XSSFWorkbook();
+    }
+
+    public void setData(List<BookDto> list){
+        this.list = list;
     }
 
     private void  writeHeaderLine() {
@@ -80,11 +97,30 @@ public class BookExcelExporter {
         writeHeaderLine();
         writeDataLines();
 
-        ServletOutputStream outputStream = response.getOutputStream();
-        workbook.write(outputStream);
+        workbook.write(response.getOutputStream());
         workbook.close();
+    }
 
+    public String export(String fileName) throws IOException {
+        writeHeaderLine();
+        writeDataLines();
+
+        File path = new File(FileSyncJob.localDirectory);
+        if(!path.exists()) path.mkdirs();
+        File file = File.createTempFile("file", ".xlsx", path);
+        FileOutputStream outputStream = new FileOutputStream(file);
+
+        workbook.write(outputStream);
         outputStream.close();
+        file.deleteOnExit();
+
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName + ".xlsx", file));
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, fileName + ".xlsx")
+                .withMethod(HttpMethod.GET)
+                .withExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60));
+
+        return s3Client.generatePresignedUrl(generatePresignedUrlRequest).toString();
     }
 
 }
