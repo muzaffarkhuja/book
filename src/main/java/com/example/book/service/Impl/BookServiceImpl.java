@@ -8,14 +8,13 @@ import com.example.book.model.enums.Theme;
 import com.example.book.model.Author;
 import com.example.book.model.Book;
 import com.example.book.model.Library;
-import com.example.book.model.Searchs;
+import com.example.book.model.Searches;
 import com.example.book.repository.AuthorRepository;
 import com.example.book.repository.BookRepository;
 import com.example.book.repository.LibraryRepository;
 import com.example.book.repository.SearchRepository;
 import com.example.book.service.BookService;
 import com.example.book.service.mapper.BookMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,24 @@ import static com.example.book.service.validator.AppStatusCodes.*;
 import static com.example.book.service.validator.AppStatusMessages.*;
 
 @Service
-@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final LibraryRepository libraryRepository;
     private final SearchRepository searchRepository;
+
+    public BookServiceImpl(BookMapper bookMapper,
+                           BookRepository bookRepository,
+                           AuthorRepository authorRepository,
+                           LibraryRepository libraryRepository,
+                           SearchRepository searchRepository) {
+        this.bookMapper = bookMapper;
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.libraryRepository = libraryRepository;
+        this.searchRepository = searchRepository;
+    }
 
     @Override
     public ResponseDto<BookDto> add(BookCreateDto bookDto) {
@@ -136,7 +146,7 @@ public class BookServiceImpl implements BookService {
             List<Book> books = bookRepository.findByKeywords(keywords);
             books.forEach(book -> book.setSearchedCount(book.getSearchedCount() + 1));
             bookRepository.saveAll(books);
-            searchRepository.save(new Searchs(keywords, books.size()));
+            searchRepository.save(new Searches(keywords, books.size()));
 
 
             return ResponseDto.<List<BookDto>>builder()
@@ -147,7 +157,7 @@ public class BookServiceImpl implements BookService {
         } catch (Exception e){
             return ResponseDto.<List<BookDto>>builder()
                     .code(DATABASE_ERROR_CODE)
-                    .message(DATABASE_ERROR)
+                    .message(DATABASE_ERROR + e.getMessage())
                     .build();
         }
     }

@@ -16,7 +16,7 @@ import static com.example.book.service.validator.AppStatusMessages.*;
 
 @Service
 @RequiredArgsConstructor
-public class SearchsServiceImpl implements SearchsService {
+public class SearchesServiceImpl implements SearchsService {
 
     private final SearchRepository searchRepository;
     private final SearchsMapper searchsMapper;
@@ -32,7 +32,7 @@ public class SearchsServiceImpl implements SearchsService {
         } catch (Exception e){
             return ResponseDto.<List<SearchsDto>>builder()
                     .code(DATABASE_ERROR_CODE)
-                    .message(DATABASE_ERROR)
+                    .message(DATABASE_ERROR + " -> " + e.getMessage())
                     .build();
         }
     }

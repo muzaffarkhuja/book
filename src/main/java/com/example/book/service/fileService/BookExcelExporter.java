@@ -12,7 +12,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,16 +24,15 @@ import java.util.List;
 @Service
 public class BookExcelExporter {
 
-    private XSSFWorkbook workbook;
+    private final XSSFWorkbook workbook = new XSSFWorkbook();
     private XSSFSheet sheet;
     private List<BookDto> list;
-    @Autowired
-    private AmazonS3 s3Client;
+    private final AmazonS3 s3Client;
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    public BookExcelExporter() {
-        workbook = new XSSFWorkbook();
+    public BookExcelExporter(AmazonS3 s3Client) {
+        this.s3Client = s3Client;
     }
 
     public void setData(List<BookDto> list){

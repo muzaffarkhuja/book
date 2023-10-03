@@ -3,7 +3,7 @@ package com.example.book.controllers;
 import com.example.book.dto.ResponseDto;
 import com.example.book.dto.searchs.MostSearchedDTO;
 import com.example.book.dto.searchs.SearchsDto;
-import com.example.book.service.Impl.SearchsServiceImpl;
+import com.example.book.service.Impl.SearchesServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 @RequiredArgsConstructor
 public class SearchController {
-    private final SearchsServiceImpl searchsService;
+    private final SearchesServiceImpl searchsService;
 
     @GetMapping()
     public ResponseDto<List<SearchsDto>> getAll(){
